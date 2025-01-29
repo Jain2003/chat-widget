@@ -1,6 +1,6 @@
 {
   "name": "@sahaj021002/chat-widget",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A chat widget, import it directly into any React Applications",
   "type": "module",
   "main": "dist/index.js",
