@@ -1,1 +1,0 @@
-export { default as CustomComponent } from './CustomComponent.jsx';

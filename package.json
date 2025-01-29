@@ -1,7 +1,7 @@
 {
-  "name": "@sahaj021002/custom-heading",
+  "name": "@sahaj021002/chat-widget",
   "version": "1.0.2",
-  "description": "A custom heading component with title and description",
+  "description": "A chat widget, import it directly into any React Applications",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
