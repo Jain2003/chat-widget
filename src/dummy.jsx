@@ -1,22 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const ChatWidget = ({ title, description, fileUrl }) => {
+const ChatWidget = ({ title, description }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
-  const [fileContent, setFileContent] = useState('');
 
-  // Fetch the content of the text file when the component mounts
-  useEffect(() => {
-    if (fileUrl) {
-      fetch(fileUrl)
-        .then(response => response.text())
-        .then(text => setFileContent(text))
-        .catch(error => console.error('Error fetching file content:', error));
-    }
-  }, [fileUrl]);
-
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (inputText.trim() === '') return;
 
     const newMessage = {
@@ -28,32 +17,15 @@ const ChatWidget = ({ title, description, fileUrl }) => {
     setMessages([...messages, newMessage]);
     setInputText('');
 
-    // Simulate a bot response using OpenAI API
-    try {
-      const response = await fetch('https://api.openai.com/v1/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "text-davinci-003",
-          prompt: `Context: ${fileContent}\n\nUser: ${inputText}\n\nBot:`,
-          max_tokens: 150,
-          temperature: 0.7
-        })
-      });
-
-      const data = await response.json();
+    // Simulate a bot response (you can replace this with actual AI logic)
+    setTimeout(() => {
       const botResponse = {
-        text: data.choices[0].text.trim(),
+        text: `${inputText}`,
         sender: 'bot',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
       };
       setMessages(prevMessages => [...prevMessages, botResponse]);
-    } catch (error) {
-      console.error('Error fetching bot response:', error);
-    }
+    }, 500);
   };
 
   return (
@@ -107,6 +79,7 @@ const ChatWidget = ({ title, description, fileUrl }) => {
           </div>
         </div>
       )}
+      
       <style jsx>{`
         .chat-container {
           position: fixed;
