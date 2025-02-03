@@ -30,11 +30,16 @@ const ChatWidget = ({ title, description, fileUrl }) => {
 
     // Simulate a bot response using OpenAI API
     try {
-      const response = await fetch('https://api.openai.com/v1/completions', {
-        method: 'POST',
+      const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+      if (!apiKey) {
+        throw new Error("API key is missing. Make sure it's set in your .env file.");
+      }
+    
+      const response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "text-davinci-003",
@@ -43,17 +48,29 @@ const ChatWidget = ({ title, description, fileUrl }) => {
           temperature: 0.7
         })
       });
-
+    
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`API Error: ${response.status} - ${errorData.error.message}`);
+      }
+    
       const data = await response.json();
+      if (!data.choices || data.choices.length === 0) {
+        throw new Error("Invalid response from OpenAI API.");
+      }
+    
       const botResponse = {
         text: data.choices[0].text.trim(),
-        sender: 'bot',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+        sender: "bot",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })
       };
+    
       setMessages(prevMessages => [...prevMessages, botResponse]);
+    
     } catch (error) {
-      console.error('Error fetching bot response:', error);
+      console.error("Error fetching bot response:", error.message);
     }
+    
   };
 
   return (
